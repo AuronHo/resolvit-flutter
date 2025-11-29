@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../constants/app_colors.dart';
+import 'widgets/service_card.dart';
+import '../../../services/api_service.dart';
+import 'search_page.dart';
 
-// Impor kustom Anda (SAYA TIDAK MENGUBAH INI)
-import '../../../constants/app_colors.dart'; // For kPrimaryBlue
-import '../../../shared_widgets/its_logo.dart'; // For the logo
-import 'widgets/service_card.dart'; // For the ServiceCard
-
-// Impor file API service kita yang baru
-import '../../../services/api_service.dart'; // <- SESUAIKAN PATH INI
-
-// --- MODIFIKASI DIMULAI DI SINI ---
-// 1. Ubah dari StatelessWidget menjadi StatefulWidget
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -18,264 +12,234 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // 2. Tambahkan state variables
-  final TextEditingController _searchController = TextEditingController();
-  bool _isLoading = false;
-  List<dynamic> _results = []; // List untuk menampung hasil JSON
-  String? _error;
-  bool _isSearchActive = false; // Untuk tahu kapan harus menampilkan hasil
+  List<dynamic> _recommendations = [];
+  bool _isLoading = true;
 
-  // --- 3. Tambahkan Fungsi Panggilan API (sekarang lebih bersih) ---
-  Future<void> _searchServices(String query) async {
-    // Jika kueri kosong, reset ke tampilan awal
-    if (query.isEmpty) {
-      setState(() {
-        _isSearchActive = false;
-        _results = [];
-        _error = null;
-      });
-      return;
-    }
-
-    // Mulai loading
-    setState(() {
-      _isLoading = true;
-      _isSearchActive = true; // Kita sedang dalam mode pencarian
-      _error = null;
-    });
-
-    try {
-      // Panggil logic dari file terpisah
-      final List<dynamic> apiResults = await ApiService.searchServices(query);
-      
-      // Sukses: simpan hasil
-      setState(() {
-        _results = apiResults;
-      });
-    } catch (e) {
-      // Gagal: simpan pesan error
-      setState(() {
-        _error = e.toString();
-      });
-    } finally {
-      // Selesai: matikan loading
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecommendations();
   }
 
+Future<void> _fetchRecommendations() async {
+    try {
+      // 1. Panggil API (Sekarang return-nya adalah MAP/Paket)
+      final response = await ApiService.searchServices("terbaik"); 
+      
+      if (!mounted) return;
+      
+      setState(() {
+        // 2. Ambil hanya bagian 'results' dari dalam paket
+        _recommendations = response['results']; 
+        
+        // Catatan: Untuk rekomendasi awal, biasanya kita abaikan 'message' 
+        // karena AI suggestion hanya muncul kalau user mengetik pencarian aneh.
+        
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryBlue,
-        elevation: 0,
-        // --- 4. Hubungkan TextField ke Controller & Fungsi API ---
-        title: TextField(
-          controller: _searchController, // Hubungkan controller
-          style: const TextStyle(color: Colors.white), // Teks input jadi putih
-          decoration: InputDecoration(
-            hintText: 'Find what you need (mis: "website murah")',
-            hintStyle: const TextStyle(color: Colors.white70),
-            prefixIcon: const Icon(Icons.search, color: Colors.white),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.2),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: Column(
+        children: [
+          // --- HEADER SECTION ---
+          Container(
+            padding: const EdgeInsets.only(top: 50, left: 24, right: 24, bottom: 30),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF8AA8F8), kPrimaryBlue],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
             ),
-            // Tambahkan tombol 'clear'
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.white),
-                    onPressed: () {
-                      _searchController.clear();
-                      _searchServices(""); // Kirim kueri kosong untuk reset
-                    },
-                  )
-                : null,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SearchPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'find what you need',
+                                  style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                                ),
+                              ),
+                              const Icon(Icons.search, color: kPrimaryBlue),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Icon(Icons.notifications_none, color: Colors.white, size: 28),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 32, color: Colors.white),
+                    children: [
+                      TextSpan(text: 'Resolv ', style: TextStyle(fontWeight: FontWeight.w300)),
+                      TextSpan(text: 'IT', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          onSubmitted:
-              _searchServices, // Panggil API saat pengguna menekan 'Enter'
-          onChanged: (value) {
-            // Update UI tombol clear (hanya me-refresh state)
-            setState(() {});
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none_outlined,
-                color: Colors.white),
-            onPressed: () {},
+
+          // --- CONTENT ---
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const SizedBox(height: 20),
+                
+                // --- CATEGORIES ---
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0EFEA),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildCategoryItem(Icons.phone_android, 'Phone\nService'),
+                            _buildCategoryItem(Icons.laptop, 'Laptop/PC\nService'),
+                            _buildCategoryItem(Icons.grid_view, 'App Dev'),
+                            _buildCategoryItem(Icons.web, 'Web Dev'),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildCategoryItem(Icons.person, 'IT\nConsultant'),
+                            _buildCategoryItem(Icons.cloud_queue, 'Cloud\nService'),
+                            _buildCategoryItem(Icons.security, 'Cyber\nConsultant'),
+                            _buildCategoryItem(Icons.more_horiz, 'View All'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // --- RECOMMENDATION TITLE ---
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text(
+                    'Recomendation',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // --- LIST REKOMENDASI (API) ---
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
+                  ListView.builder(
+                    padding: const EdgeInsets.only(top: 10),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _recommendations.length,
+                    itemBuilder: (context, index) {
+                      final item = _recommendations[index];
+                      return ServiceCard(
+                        title: item['NamaJasa'] ?? 'Jasa Tanpa Nama',
+                        specialty: item['Kategori'] ?? 'Umum',
+                        price: item['HargaMulai'] != null 
+                            ? 'Rp ${item['HargaMulai']}' 
+                            : 'Hubungi Kami',
+                        rating: item['RatingRataRata']?.toString() ?? '0.0',
+                        isOpen: true,
+                        onTap: () {
+                           Navigator.pushNamed(context, '/service_detail');
+                        },
+                      );
+                    },
+                  ),
+
+                const SizedBox(height: 100), 
+              ],
+            ),
           ),
         ],
       ),
-      backgroundColor: Colors.grey[50],
-      // --- 5. Ganti Body untuk Menampilkan Hasil Pencarian ---
-      body: _isLoading
-          ? const Center(
-              child:
-                  CircularProgressIndicator()) // Tampilkan loading di tengah
-          : _isSearchActive
-              ? _buildResultsBody() // Tampilkan hasil pencarian
-              : _buildDefaultBody(), // Tampilkan body asli (logo, kategori, dll)
     );
   }
 
-  // Ini adalah body asli Anda, dibungkus dalam sebuah fungsi
-  Widget _buildDefaultBody() {
-    // Semua spasi ilegal (non-breaking spaces) telah dihapus dari sini.
-    return ListView(
-      // The ListView needs to start from the top
-      padding: EdgeInsets.zero,
-      children: [
-        // --- 1. SEPARATE BLUE LOGO BLOCK ---
-        Container(
-          color: kPrimaryBlue,
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: ItsLogo(
-              color: Colors.white,
-              size: 64, // You can adjust this size
-            ),
-          ),
-        ),
-
-        // --- 2. SEPARATE WHITE CATEGORY BLOCK ---
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          color: Colors.white, // White background for this section
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // Call the "inverted" helper
-                  _buildInvertedCategoryIcon(
-                      Icons.phone_android, 'PC Service'),
-                  _buildInvertedCategoryIcon(Icons.computer, 'Laptop/PC'),
-                  _buildInvertedCategoryIcon(Icons.code, 'Web Dev'),
-                  _buildInvertedCategoryIcon(Icons.brush, 'Design'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildInvertedCategoryIcon(
-                      Icons.support_agent, 'IT Consult'),
-                  _buildInvertedCategoryIcon(Icons.cloud, 'Cloud'),
-                  _buildInvertedCategoryIcon(Icons.security, 'Cyber'),
-                  _buildInvertedCategoryIcon(Icons.grid_view, 'View All'),
-                ],
-              ),
-            ],
-          ),
-        ),
-        
-        const SizedBox(height: 10), // Small spacer
-
-        // --- 3. RECOMMENDATION LIST ---
-        Container(
-          color: Colors.white, // White background for this section
-          padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-          child: Text(
-            'Recomendation',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // Service Cards will sit on the grey[50] background
-        ServiceCard(
-          title: 'Buana Phone Service',
-          specialty: 'Specialty in phone service',
-          price: 'Rp 50.000',
-          rating: '5',
-          isOpen: true,
-          onTap: () {
-            Navigator.pushNamed(context, '/service_detail');
-          },
-        ), // <-- Typo _), sudah diperbaiki di sini
-        ServiceCard(
-          title: 'Another Service',
-          specialty: 'Web design',
-          price: 'Rp 150.000',
-          rating: '4.8',
-          isOpen: false,
-          onTap: () {}, // <-- Typo : () {}, sudah diperbaiki di sini
-        ),
-      ],
-    );
-  }
-
-  // --- 6. Tambahkan Widget untuk Menampilkan Hasil Pencarian ---
-  Widget _buildResultsBody() {
-    // Tampilkan error jika ada
-    if (_error != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            // Tampilkan pesan error dari API Service
-            _error!,
-            style: const TextStyle(color: Colors.red, fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-
-    // Tampilkan jika hasil kosong
-    if (_results.isEmpty) {
-      return const Center(child: Text("Tidak ada hasil ditemukan."));
-    }
-
-    // Tampilkan hasil dalam ListView
-    return ListView.builder(
-      padding: const EdgeInsets.all(8.0), // Beri sedikit padding
-      itemCount: _results.length,
-      itemBuilder: (context, index) {
-        final item = _results[index];
-        
-        // Menggunakan ServiceCard custom Anda, tapi dengan data dari API
-        return ServiceCard(
-          // Ambil data dari JSON 'item'
-          title: item['NamaJasa'] ?? 'Tanpa Judul',
-          specialty: (item['DeskripsiJasa'] as String).length > 50
-              ? (item['DeskripsiJasa'] as String).substring(0, 50) + '...'
-              : item['DeskripsiJasa'],
-          price: 'Rp ${item['HargaMulai']}',
-          rating: (item['RatingRataRata'] ?? 0.0).toString(),
-          isOpen: true, // Anda perlu menambahkan data ini di API jika ada
-          onTap: () {
-            // Arahkan ke halaman detail dengan JasaID
-            // Navigator.pushNamed(context, '/service_detail', arguments: item['JasaID']);
-            print("Tapped on JasaID: ${item['JasaID']}");
-          },
-        );
+  // --- UPDATE DI SINI: NAVIGASI KATEGORI ---
+  Widget _buildCategoryItem(IconData icon, String label) {
+    return GestureDetector(
+      onTap: () {
+         // 1. Bersihkan label (ubah "Phone\nService" jadi "Phone Service")
+         final categoryQuery = label.replaceAll('\n', ' ');
+         
+         // 2. Navigasi ke Category List membawa nama kategorinya
+         Navigator.pushNamed(
+           context, 
+           '/category_list', 
+           arguments: categoryQuery
+         );
       },
-    );
-  }
-
-  // --- Ini adalah helper widget asli Anda ---
-  Widget _buildInvertedCategoryIcon(IconData icon, String label) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: kPrimaryBlue.withOpacity(0.05), // Very light blue
-            borderRadius: BorderRadius.circular(10),
+      child: Column(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2)),
+              ],
+            ),
+            child: Icon(icon, color: Colors.black, size: 28),
           ),
-          child: Icon(icon, color: kPrimaryBlue, size: 30), // Blue icon
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.black87, fontSize: 12), // Dark text
-        ),
-      ],
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.black87),
+          ),
+        ],
+      ),
     );
   }
 }

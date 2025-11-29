@@ -2,42 +2,54 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // --- ALAMAT IP SERVER ANDA ---
-  // Gunakan '10.0.2.2' jika menjalankan di Android Emulator
-  // Gunakan '127.0.0.1' jika menjalankan di iOS Simulator atau Web/Desktop
-  static const String _baseUrl = "http://10.0.2.2:8000";
+  // PILIH SALAH SATU BASE URL DI BAWAH INI:
+  
+  // OPSI A: Jika pakai Emulator Android Studio
+  // static const String _baseUrl = "http://10.0.2.2:8000";
 
-  // --- FUNGSI PENCARIAN UTAMA ---
-  // Fungsi ini dipanggil dari UI (HomeScreen)
-  static Future<List<dynamic>> searchServices(String query) async {
-    // Buat URL yang lengkap dan aman
+  // OPSI B: Jika pakai HP Fisik & WiFi Sama (Ganti angka sesuai ipconfig laptop)
+  // static const String _baseUrl = "http://192.168.1.8:8000";
+
+  // OPSI C: Jika pakai Ngrok (Harus ganti link setiap restart ngrok)
+  static const String _baseUrl = "https://permissively-photoperiodic-angelic.ngrok-free.dev"; 
+
+  // =======================================================================
+
+  // Kita ubah return type jadi Map agar bisa bawa 'results' DAN 'message'
+  static Future<Map<String, dynamic>> searchServices(String query) async {
     final Uri apiUrl =
         Uri.parse('$_baseUrl/search?query=${Uri.encodeComponent(query)}');
 
+    print("Mencoba request ke: $apiUrl"); 
+
     try {
-      // 1. Kirim permintaan GET ke server
       final response = await http.get(apiUrl).timeout(const Duration(seconds: 15));
 
-      // 2. Periksa apakah server merespons dengan sukses
       if (response.statusCode == 200) {
-        // 3. Ubah (decode) data JSON dari server
         final data = json.decode(response.body);
         
-        // 4. Kembalikan hanya list 'results'-nya
+        // Cek struktur data baru dari Python
+        // Python return: {"results": [...], "message": "..."}
+        
+        List<dynamic> results = [];
+        String? message = data['message']; // Ambil pesan saran AI
+
         if (data['results'] is List) {
-          return data['results'] as List<dynamic>;
-        } else {
-          // Jika 'results' tidak ada atau bukan list
-          throw Exception('Format data tidak terduga dari server');
+          results = data['results'];
         }
+
+        // Kembalikan paket lengkap
+        return {
+          'results': results,
+          'message': message, 
+        };
+
       } else {
-        // Jika server memberikan error (misal: 500, 404)
-        throw Exception('Server error: ${response.statusCode}');
+        throw Exception('Server error (${response.statusCode})');
       }
     } catch (e) {
-      // Jika koneksi gagal (timeout, server mati, tidak ada internet)
-      // Kita lempar error agar UI bisa menampilkannya
-      throw Exception('Koneksi ke server gagal. Pastikan server API berjalan.\n$e');
+      print("Error detail: $e");
+      throw Exception('Gagal terhubung. Cek Server Python / Ngrok / IP.');
     }
   }
 }

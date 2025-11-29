@@ -14,7 +14,8 @@ import 'features/auth/view/splash_screen.dart';
 import 'features/auth/view/auth_welcome_screen.dart';
 import 'features/auth/view/create_account_screen.dart';
 import 'features/main_navigation/view/main_navigation_shell.dart';
-// import 'features/service/view/service_detail_screen.dart';
+import 'features/home/view/category_list_screen.dart';
+import 'features/service/view/service_detail_screen.dart';
 
 void main() {
   runApp(
@@ -117,7 +118,12 @@ class MyApp extends StatelessWidget {
         '/welcome': (context) => const AuthWelcomeScreen(),
         '/create_account': (context) => const CreateAccountScreen(),
         '/home': (context) => const MainNavigationShell(),
-        // '/service_detail': (context) => const ServiceDetailScreen(),
+        '/category_list': (context) {
+          // Mengambil argumen judul kategori yang dikirim
+          final title = ModalRoute.of(context)!.settings.arguments as String? ?? 'Services';
+          return CategoryListScreen(categoryTitle: title);
+        },
+        '/service_detail': (context) => const ServiceDetailScreen(),
       },
     );
   }
