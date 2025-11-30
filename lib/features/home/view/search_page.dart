@@ -176,8 +176,7 @@ class _SearchPageState extends State<SearchPage> {
                               rating: item['RatingRataRata']?.toString() ?? '0.0',
                               isOpen: true,
                               onTap: () {
-                                // TODO: Navigasi ke halaman detail
-                                print("Klik ID: ${item['JasaID']}");
+                               Navigator.pushNamed(context, '/service_detail');
                               }, 
                             );
                           },

@@ -55,4 +55,14 @@ class AuthController extends ChangeNotifier {
     
     // If it failed, you would: return false;
   }
+
+  // Fungsi Login Dummy
+  Future<bool> loginUser() async {
+    // Simulasi loading 2 detik
+    await Future.delayed(const Duration(seconds: 2));
+    
+    // Disini nanti logika ke API/Firebase
+    // Untuk sekarang kita anggap selalu sukses
+    return true; 
+  }
 }

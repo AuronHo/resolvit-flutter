@@ -136,6 +136,7 @@ class AuthWelcomeScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         // Login Logic
+                        Navigator.pushNamed(context, '/login');
                       },
                       child: const Text(
                         "Log In",

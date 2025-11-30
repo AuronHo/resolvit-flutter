@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 // 1. Imports for Logic/State
 import 'features/auth/logic/auth_controller.dart';
 import 'features/main_navigation/logic/navigation_controller.dart';
-import 'features/main_navigation/logic/theme_controller.dart'; // Ensure you created this file
+import 'features/main_navigation/logic/theme_controller.dart'; 
 
 // 2. Imports for Colors
 import 'constants/app_colors.dart';
@@ -16,6 +16,10 @@ import 'features/auth/view/create_account_screen.dart';
 import 'features/main_navigation/view/main_navigation_shell.dart';
 import 'features/home/view/category_list_screen.dart';
 import 'features/service/view/service_detail_screen.dart';
+import 'features/auth/view/login_screen.dart'; 
+import 'features/auth/view/reset_password_screen.dart';
+import 'features/auth/view/verification_code_screen.dart';
+import 'features/auth/view/new_password_screen.dart';
 
 void main() {
   runApp(
@@ -124,6 +128,10 @@ class MyApp extends StatelessWidget {
           return CategoryListScreen(categoryTitle: title);
         },
         '/service_detail': (context) => const ServiceDetailScreen(),
+        '/login': (context) => const LoginScreen(), 
+        '/reset_password': (context) => const ResetPasswordScreen(),
+        '/verification_code': (context) => const VerificationCodeScreen(),
+        '/new_password': (context) => const NewPasswordScreen(),
       },
     );
   }
