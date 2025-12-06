@@ -20,6 +20,14 @@ import 'features/auth/view/login_screen.dart';
 import 'features/auth/view/reset_password_screen.dart';
 import 'features/auth/view/verification_code_screen.dart';
 import 'features/auth/view/new_password_screen.dart';
+import 'features/auth/view/service_provider_register_screen.dart';
+import 'features/auth/view/setup_business_profile_screen.dart';
+import 'features/profile/view/business_profile_screen.dart';
+import 'features/profile/view/business_view_details_screen.dart';
+import 'features/profile/view/edit_business_details_screen.dart';
+import 'features/profile/view/settings_screen.dart';
+import 'features/profile/view/edit_profile_screen.dart';
+
 
 void main() {
   runApp(
@@ -132,6 +140,13 @@ class MyApp extends StatelessWidget {
         '/reset_password': (context) => const ResetPasswordScreen(),
         '/verification_code': (context) => const VerificationCodeScreen(),
         '/new_password': (context) => const NewPasswordScreen(),
+        '/service_provider_register': (context) => const ServiceProviderRegisterScreen(),
+        '/setup_business_profile': (context) => const SetupBusinessProfileScreen(),
+        '/business_profile': (context) => const BusinessProfileScreen(),
+        '/business_view_details': (context) => const BusinessViewDetailsScreen(),
+        '/edit_business_details': (context) => const EditBusinessDetailsScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/edit_profile': (context) => const EditProfileScreen(),
       },
     );
   }

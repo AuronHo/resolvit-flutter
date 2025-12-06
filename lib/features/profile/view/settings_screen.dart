@@ -1,104 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../main_navigation/logic/theme_controller.dart'; 
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Warna Biru Branding
     const Color brandBlue = Color(0xFF4981FB);
-    
-    // Akses Theme Controller
     final themeController = context.watch<ThemeController>();
     final isDark = themeController.isDarkMode;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9), // Background putih abu
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: brandBlue,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Settings',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- 1. HEADER BIRU ---
-            Container(
-              padding: const EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
-              decoration: const BoxDecoration(
-                color: brandBlue,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: Row(
-                children: [
-                  // Tombol Back (Kotak Biru Muda/Transparan sesuai gambar)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
-                        // Kembali ke Home atau tab sebelumnya
-                        // Jika ini root tab, mungkin tidak perlu aksi atau pindah ke Home tab
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Text(
-                    'Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 20),
 
-            // --- 2. PROFIL INFO (AVATAR & NAMA) ---
+            // --- 1. PROFILE HEADER ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Row(
                 children: [
-                  // Avatar
                   Container(
-                    width: 80,
-                    height: 80,
+                    width: 70,
+                    height: 70,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey[300],
                       image: const DecorationImage(
-                        // Ganti dengan foto profil asli
-                        image: NetworkImage('https://i.pravatar.cc/300?img=12'), 
+                        image: NetworkImage('https://via.placeholder.com/150'), 
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  // Nama
-                  const Text(
-                    'Sule',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  const SizedBox(width: 16),
+                  const Expanded(
+                    child: Text(
+                      'Buana Phone Service',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Spacer(),
-                  // Tombol Edit
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/edit_profile');
+                    },
                     child: const Text(
                       'edit',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.black, 
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
                       ),
@@ -109,53 +76,45 @@ class ProfileScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
-            const Divider(height: 1, thickness: 1, color: Colors.grey), // Garis Pembatas
+            const Divider(height: 1, thickness: 1, color: Colors.grey),
 
-            // --- 3. INFO EMAIL & PHONE ---
+            // --- 2. INFO ROWS ---
             _buildInfoRow('Email', 'sule123@gmail.com'),
             _buildInfoRow('Phone Number', '0895712544455'),
 
             const SizedBox(height: 20),
 
-            // --- 4. SETTINGS HEADER ---
+            // --- 3. SETTINGS TITLE ---
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
               child: Text(
                 'Settings',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const Divider(height: 1, thickness: 1, color: Colors.grey),
 
-            // --- 5. MENU SETTINGS ---
+            // --- 4. SETTINGS ITEMS ---
             
-            // a. Theme Toggle
+            // Theme Toggle
             _buildActionRow(
               title: 'Theme',
               trailing: Row(
                 children: [
                   Text(
                     isDark ? 'dark mode' : 'light mode',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                   const SizedBox(width: 8),
-                  Icon(
-                    isDark ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Colors.grey,
-                  ),
+                  const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
                 ],
               ),
               onTap: () {
-                // LOGIKA GANTI TEMA
                 themeController.toggleTheme(!isDark);
               },
             ),
 
-            // b. Reset Password (Navigasi ke screen yang sudah kita buat)
+            // Reset Password
             _buildActionRow(
               title: 'Reset Password',
               trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
@@ -164,29 +123,25 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
 
-            // c. Service Provider Register
+            // Language
             _buildActionRow(
-              title: 'Service Provider Register',
+              title: 'Language',
               trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
               onTap: () {
-                Navigator.pushNamed(context, '/service_provider_register');
+                // Logic for language
               },
             ),
-            
-            // Tambahan padding bawah agar tidak tertutup nav bar
-            const SizedBox(height: 100),
           ],
         ),
       ),
     );
   }
 
-  // --- WIDGET HELPER 1: Baris Info (Kiri Label, Kanan Value) ---
+  // Helper for Email/Phone rows
   Widget _buildInfoRow(String label, String value) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: const BoxDecoration(
-        color: Colors.white,
         border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
       ),
       child: Row(
@@ -199,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // --- WIDGET HELPER 2: Baris Aksi (Settings) ---
+  // Helper for Clickable Settings rows
   Widget _buildActionRow({
     required String title,
     required Widget trailing,
@@ -210,7 +165,6 @@ class ProfileScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: const BoxDecoration(
-          color: Colors.white,
           border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
         ),
         child: Row(
