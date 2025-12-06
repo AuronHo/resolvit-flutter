@@ -47,7 +47,12 @@ class _SavedScreenState extends State<SavedScreen> {
           // --- HEADER SECTION ---
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(top: 60, left: 24, right: 24, bottom: 20),
+            padding: const EdgeInsets.only(
+              top: 60,
+              left: 24,
+              right: 24,
+              bottom: 20,
+            ),
             decoration: const BoxDecoration(
               color: brandBlue,
               borderRadius: BorderRadius.only(
@@ -69,10 +74,7 @@ class _SavedScreenState extends State<SavedScreen> {
                 SizedBox(height: 8),
                 Text(
                   'Your favorite workshops',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
@@ -85,7 +87,11 @@ class _SavedScreenState extends State<SavedScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.bookmark_border, size: 60, color: Colors.grey[400]),
+                        Icon(
+                          Icons.bookmark_border,
+                          size: 60,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           "No saved services yet",
@@ -99,7 +105,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     itemCount: _savedServices.length,
                     itemBuilder: (context, index) {
                       final item = _savedServices[index];
-                      
+
                       // Menggunakan Widget ServiceCard yang sama dengan Home
                       return ServiceCard(
                         title: item['title'],

@@ -121,7 +121,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
         actions: [
           IconButton(
             icon: const Icon(Icons.bookmark, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/saved');
+            },
           ),
         ],
       ),

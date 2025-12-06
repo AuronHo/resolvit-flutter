@@ -96,7 +96,12 @@ Future<void> _fetchRecommendations() async {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Icon(Icons.notifications_none, color: Colors.white, size: 28),
+                    IconButton( 
+                      icon: const Icon(Icons.notifications_none, color: Colors.white, size: 28),
+                      onPressed: () {
+                         Navigator.pushNamed(context, '/notification');
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),

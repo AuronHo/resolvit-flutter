@@ -8,17 +8,26 @@ class EditBusinessDetailsScreen extends StatefulWidget {
 }
 
 class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
-  // Controllers
-  final TextEditingController _specialityController = TextEditingController(text: "phone service");
-  final TextEditingController _priceController = TextEditingController(text: "50.000");
-  final TextEditingController _descController = TextEditingController(text: "perbaiki hp di sini ajah");
-  final TextEditingController _locationController = TextEditingController(text: "Lucky plaza, Jl. Imam Bonjol...");
+  // --- CONTROLLERS ---
+  late TextEditingController _specialityController;
+  late TextEditingController _priceController;
+  late TextEditingController _descController;
+  late TextEditingController _locationController;
 
-  // Toggles
+  // --- TOGGLES ---
   final Map<String, bool> _operationalDays = {
     'Monday': true, 'Tuesday': true, 'Wednesday': true,
     'Thursday': true, 'Friday': true, 'Saturday': true, 'Sunday': false,
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _specialityController = TextEditingController(text: "website service");
+    _priceController = TextEditingController(text: "100.000");
+    _descController = TextEditingController(text: "Buat Website di sini aja");
+    _locationController = TextEditingController(text: "Lucky plaza, Jl. Imam Bonjol, Lubuk Baja Kota...");
+  }
 
   @override
   void dispose() {
@@ -32,23 +41,22 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     const Color brandBlue = Color(0xFF4981FB);
-    // Get screen width to calculate responsive label width
-    final double screenWidth = MediaQuery.of(context).size.width;
-    // Label takes 30% of screen, Input takes rest
-    final double labelWidth = screenWidth * 0.30; 
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: true, // Allow scrolling when keyboard opens
+        resizeToAvoidBottomInset: true,
         
         appBar: AppBar(
           backgroundColor: brandBlue,
           elevation: 0,
-          centerTitle: true,
+          centerTitle: false,
+          // Force White Theme
           iconTheme: const IconThemeData(color: Colors.white),
-          titleTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          titleTextStyle: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18
+          ),
           
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -60,27 +68,25 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
           
           title: const Text('Edit details'),
           
+          // --- FIX: SAFE SAVE BUTTON ---
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Center(
-                child: SizedBox(
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: brandBlue,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                    ),
-                    child: const Text("Save", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: TextButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: brandBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
                   ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  minimumSize: const Size(60, 32),
                 ),
+                child: const Text("Save", style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             )
           ],
@@ -91,13 +97,16 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
         
         body: SafeArea(
           child: ListView(
-            padding: const EdgeInsets.only(bottom: 100, top: 10),
+            padding: EdgeInsets.only(
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 50, 
+            ),
             children: [
               // 1. Speciality
-              _buildFormRow(labelWidth, 'Speciality*', _buildGreyInput(controller: _specialityController)),
+              _buildFormRow('Speciality*', _buildGreyInput(controller: _specialityController)),
               
-              // 2. Price Range
-              _buildFormRow(labelWidth, 'Price Range*', Row(
+              // 2. Price
+              _buildFormRow('Price Range*', Row(
                 children: [
                   const Text("Start from Rp ", style: TextStyle(fontSize: 12, color: Colors.black87)),
                   const SizedBox(width: 8),
@@ -106,11 +115,10 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
               )),
               
               // 3. Description
-              _buildFormRow(labelWidth, 'Description*', _buildGreyInput(controller: _descController, maxLines: 4)),
+              _buildFormRow('Description*', _buildGreyInput(controller: _descController, lines: 4)),
 
-              // 4. Operational Hours
+              // 4. Hours
               _buildFormRow(
-                labelWidth,
                 'Operational hours*',
                 Column(
                   children: _operationalDays.keys.map((day) {
@@ -121,27 +129,29 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
 
               // 5. Location
               _buildFormRow(
-                labelWidth,
                 'Set Location*',
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 80,
+                      width: 100,
                       height: 80,
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade400),
                       ),
                       child: const Center(child: Icon(Icons.location_on, color: Colors.red, size: 30)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _buildGreyInput(controller: _locationController, maxLines: 3),
+                      child: _buildGreyInput(controller: _locationController, lines: 3),
                     ),
                   ],
                 ),
               ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -149,68 +159,60 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
     );
   }
 
-  // --- HELPER 1: ROW STRUCTURE ---
-  Widget _buildFormRow(double labelWidth, String label, Widget content) {
+  // --- HELPERS ---
+
+  Widget _buildFormRow(String label, Widget content) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: 1)),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey, width: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label with Responsive Width
           SizedBox(
-            width: labelWidth,
-            child: Text(
-              label, 
-              style: const TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w500)
-            ),
+            width: 120,
+            child: Text(label, style: const TextStyle(fontSize: 12, color: Colors.black87)),
           ),
-          // Content fills the rest
           Expanded(child: content),
         ],
       ),
     );
   }
 
-  // --- HELPER 2: SAFE INPUT (NO CONTAINER WRAPPER) ---
-  // We removed the Container wrapper. The TextField handles its own background.
-  // This is the cleanest way to avoid layout crashes.
-  Widget _buildGreyInput({int maxLines = 1, required TextEditingController controller}) {
+  Widget _buildGreyInput({int lines = 1, required TextEditingController controller}) {
     return TextField(
       controller: controller,
-      maxLines: maxLines,
-      style: const TextStyle(fontSize: 13, color: Colors.black),
+      maxLines: lines,
+      style: const TextStyle(fontSize: 12, color: Colors.black),
       decoration: InputDecoration(
-        isDense: true, 
         filled: true,
-        fillColor: const Color(0xFFF0F0F0), // Grey Background
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        fillColor: const Color(0xFFF0F0F0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide.none,
         ),
+        isDense: true, 
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
     );
   }
 
-  // --- HELPER 3: TIME INPUT ---
-  // Small inputs for the hours
+  // Helper for Time Inputs
   Widget _buildTimeInput(String initialValue) {
     return TextField(
       controller: TextEditingController(text: initialValue),
       textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 12, color: Colors.black),
       decoration: InputDecoration(
-        isDense: true,
         filled: true,
         fillColor: const Color(0xFFF0F0F0),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide.none,
         ),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 8),
       ),
     );
   }
@@ -244,13 +246,13 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
           ),
           const SizedBox(width: 8),
           
-          // Day Name (Responsive: Uses Expanded to push inputs to the right)
+          // Day Name
           Expanded(
             flex: 2,
             child: Text(day, style: const TextStyle(fontSize: 11, color: Colors.black87))
           ),
           
-          // Time Inputs or Closed Text
+          // Inputs
           if (isOpen) ...[
             Expanded(flex: 3, child: _buildTimeInput("08:00")),
             const Padding(padding: EdgeInsets.symmetric(horizontal: 4.0), child: Text("-", style: TextStyle(fontSize: 10))),

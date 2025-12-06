@@ -54,13 +54,13 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 16),
                   const Expanded(
                     child: Text(
-                      'Buana Phone Service',
+                      'Cepatlulus Web Service',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.popAndPushNamed(context, '/edit_profile');
+                      Navigator.pushNamed(context, '/edit_business_profile');
                     },
                     child: const Text(
                       'edit',

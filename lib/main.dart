@@ -27,7 +27,11 @@ import 'features/profile/view/business_view_details_screen.dart';
 import 'features/profile/view/edit_business_details_screen.dart';
 import 'features/profile/view/settings_screen.dart';
 import 'features/profile/view/edit_profile_screen.dart';
-
+import 'features/profile/view/test_screen.dart';
+import 'features/notification/view/notification_screen.dart';
+import 'features/notification/view/rate_service_screen.dart';
+import 'features/saved/view/saved_screen.dart';
+import 'features/profile/view/edit_business_profile_screen.dart';
 
 void main() {
   runApp(
@@ -147,6 +151,11 @@ class MyApp extends StatelessWidget {
         '/edit_business_details': (context) => const EditBusinessDetailsScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/edit_profile': (context) => const EditProfileScreen(),
+        '/test_screen': (context) => const TestScreen(),
+        '/notification': (context) => const NotificationScreen(),
+        '/rate_service': (context) => const RateServiceScreen(),
+        '/saved': (context) => const SavedScreen(),
+        '/edit_business_profile': (context) => const EditBusinessProfileScreen(),
       },
     );
   }

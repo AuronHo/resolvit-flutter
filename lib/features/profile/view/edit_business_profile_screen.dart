@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class EditBusinessProfileScreen extends StatefulWidget {
+  const EditBusinessProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditBusinessProfileScreen> createState() => _EditBusinessProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditBusinessProfileScreenState extends State<EditBusinessProfileScreen> {
   // --- CONTROLLERS ---
   late TextEditingController _nameController;
   late TextEditingController _emailController;
@@ -16,7 +16,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "Sule");
+    // Initialize with existing data
+    _nameController = TextEditingController(text: "Cepatlulus Web Service");
     _emailController = TextEditingController(text: "sule123@gmail.com");
     _phoneController = TextEditingController(text: "0895712544455");
   }
@@ -42,7 +43,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         appBar: AppBar(
           backgroundColor: brandBlue,
           elevation: 0,
-          centerTitle: false,
+          centerTitle: true,
+          
           iconTheme: const IconThemeData(color: Colors.white),
           titleTextStyle: const TextStyle(
             color: Colors.white, 
@@ -61,6 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           title: const Text('Edit Profile'),
           
           // --- FIX: SAFE SAVE BUTTON ---
+          // Replaced complex SizedBox/Center/ElevatedButton with a simple TextButton
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
@@ -76,7 +79,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(20)
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  // Ensure button doesn't get too big
+                  // Ensure button has a reasonable hit area
                   minimumSize: const Size(60, 32), 
                 ),
                 child: const Text("Save", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -99,7 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const Divider(height: 1, thickness: 1, color: Colors.grey),
 
               // Inputs
-              _buildInputRow("Name*", _nameController),
+              _buildInputRow("Business Name*", _nameController),
               _buildInputRow("Email*", _emailController),
               _buildInputRow("Phone Number*", _phoneController),
               

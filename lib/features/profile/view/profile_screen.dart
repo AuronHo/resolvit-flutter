@@ -34,19 +34,19 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 children: [
                   // Tombol Back (Kotak Biru Muda/Transparan sesuai gambar)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
-                        // Kembali ke Home atau tab sebelumnya
-                        // Jika ini root tab, mungkin tidak perlu aksi atau pindah ke Home tab
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white.withOpacity(0.2),
+                  //     borderRadius: BorderRadius.circular(8),
+                  //   ),
+                  //   // child: IconButton(
+                  //   //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  //   //   onPressed: () {
+                  //       // Kembali ke Home atau tab sebelumnya
+                  //       // Jika ini root tab, mungkin tidak perlu aksi atau pindah ke Home tab
+                  //     },
+                  //   ),
+                  // ),
                   const SizedBox(width: 16),
                   const Text(
                     'Profile',
@@ -94,7 +94,9 @@ class ProfileScreen extends StatelessWidget {
                   const Spacer(),
                   // Tombol Edit
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/edit_profile');
+                    },
                     child: const Text(
                       'edit',
                       style: TextStyle(
