@@ -204,7 +204,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
       // --- 5. FLOATING ACTION BUTTON (Add Post) ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Logic to add new portfolio
+          Navigator.pushNamed(context, '/add_post');
         },
         backgroundColor: const Color(0xFF4981FB),
         child: const Icon(Icons.add, color: Colors.white),
