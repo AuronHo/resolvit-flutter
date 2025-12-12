@@ -6,58 +6,150 @@ class ServiceCard extends StatelessWidget {
   final String price;
   final String rating;
   final bool isOpen;
+  final String imageUrl;
   final VoidCallback onTap;
 
   const ServiceCard({
     super.key,
     required this.title,
-    this.specialty = '',
-    this.price = '',
-    this.rating = '',
-    this.isOpen = false,
+    required this.specialty,
+    required this.price,
+    required this.rating,
+    required this.isOpen,
+    required this.imageUrl, 
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              // Placeholder for image
-              Container(
-                width: 80,
-                height: 80,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16, left: 24, right: 24),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start, // Ratakan konten ke atas
+          children: [
+            // 1. GAMBAR (Kotak di Kiri)
+            Container(
+              width: 100, // Ukuran sedikit diperbesar agar proporsional
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
                 color: Colors.grey[200],
-                child: Icon(Icons.store, color: Colors.grey[400]),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text(specialty, style: TextStyle(color: Colors.grey[600])),
-                    Text('Price start from $price'),
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Colors.amber, size: 16),
-                        Text(rating),
-                        SizedBox(width: 8),
-                        Text(isOpen ? 'Open everyday (24/7)' : 'Closed', 
-                             style: TextStyle(color: isOpen ? Colors.green : Colors.red)),
-                      ],
-                    ),
-                  ],
+                image: DecorationImage(
+                  // Ganti URL ini dengan gambar toko asli jika ada
+                  image: NetworkImage(imageUrl), 
+                  fit: BoxFit.cover,
                 ),
               ),
-              Icon(Icons.bookmark_border, color: Colors.grey),
-            ],
-          ),
+            ),
+            
+            const SizedBox(width: 12), // Jarak
+
+            // 2. KONTEN TEKS (Kanan)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // --- BARIS 1: JUDUL & ICON BOOKMARK ---
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Judul Toko (Bisa panjang)
+                      Expanded(
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      // Icon Bookmark Biru
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: Icon(
+                          Icons.bookmark, 
+                          color: Color(0xFF4981FB), // Warna Biru Brand
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // --- BARIS 2: RATING ---
+                  Row(
+                    children: [
+                      Text(
+                        rating,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                    ],
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // --- BARIS 3: SPESIALISASI ---
+                  Text(
+                    specialty,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // --- BARIS 4: HARGA ---
+                  Text(
+                    "Price start from $price", // Format teks sesuai gambar
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // --- BARIS 5: STATUS JAM BUKA (HIJAU) ---
+                  Text(
+                    isOpen ? "Open (08:00 - 22:00)" : "Closed",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: isOpen ? Colors.green : Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

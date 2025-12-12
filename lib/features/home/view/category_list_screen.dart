@@ -16,6 +16,7 @@ class CategoryListScreen extends StatelessWidget {
       'price': 'Rp 50.000',
       'rating': '5',
       'isOpen': true,
+      'image': 'https://loremflickr.com/320/240/computer?random=10'
     },
     {
       'title': 'Mitra Komputer',
@@ -23,6 +24,7 @@ class CategoryListScreen extends StatelessWidget {
       'price': 'Rp 75.000',
       'rating': '4.8',
       'isOpen': true,
+      'image': 'https://loremflickr.com/320/240/phone?random=11'
     },
     {
       'title': 'Jasa Web Kilat',
@@ -30,6 +32,7 @@ class CategoryListScreen extends StatelessWidget {
       'price': 'Rp 500.000',
       'rating': '4.9',
       'isOpen': false,
+      'image': 'https://loremflickr.com/320/240/phone?random=12'
     },
     // ... tambahkan data dummy lainnya jika perlu
   ];
@@ -97,6 +100,7 @@ class CategoryListScreen extends StatelessWidget {
                   price: item['price'],
                   rating: item['rating'],
                   isOpen: item['isOpen'],
+                  imageUrl: 'https://loremflickr.com/320/240/technician?lock=$index',
                   onTap: () => Navigator.pushNamed(context, '/service_detail'),
                 );
               },

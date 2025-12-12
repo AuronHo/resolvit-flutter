@@ -135,28 +135,6 @@ class ProfileScreen extends StatelessWidget {
 
             // --- 5. MENU SETTINGS ---
             
-            // a. Theme Toggle
-            _buildActionRow(
-              title: 'Theme',
-              trailing: Row(
-                children: [
-                  Text(
-                    isDark ? 'dark mode' : 'light mode',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    isDark ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
-              onTap: () {
-                // LOGIKA GANTI TEMA
-                themeController.toggleTheme(!isDark);
-              },
-            ),
-
             // b. Reset Password (Navigasi ke screen yang sudah kita buat)
             _buildActionRow(
               title: 'Reset Password',

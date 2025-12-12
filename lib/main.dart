@@ -33,6 +33,7 @@ import 'features/notification/view/rate_service_screen.dart';
 import 'features/saved/view/saved_screen.dart';
 import 'features/profile/view/edit_business_profile_screen.dart';
 import 'features/profile/view/add_post_screen.dart';
+import 'features/profile/view/profile_screen.dart';
 
 void main() {
   runApp(
@@ -158,6 +159,7 @@ class MyApp extends StatelessWidget {
         '/saved': (context) => const SavedScreen(),
         '/edit_business_profile': (context) => const EditBusinessProfileScreen(),
         '/add_post': (context) => const AddPostScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
