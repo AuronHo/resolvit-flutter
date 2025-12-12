@@ -85,11 +85,17 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
             Stack(
               clipBehavior: Clip.none,
               children: [
-                // Blue Banner Background
+                // Banner
                 Container(
                   height: 180,
                   width: double.infinity,
-                  color: brandBlue,
+                  decoration: const BoxDecoration(
+                    color: brandBlue,
+                    image: DecorationImage(
+                      image: NetworkImage('https://loremflickr.com/640/360/office,technology?lock=banner'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   child: Stack(
                     children: [
                       Opacity(
@@ -120,7 +126,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
                             radius: 35,
                             backgroundColor: Colors.grey[300],
                             // Owner's Avatar
-                            backgroundImage: const NetworkImage('https://via.placeholder.com/150'), 
+                            backgroundImage: const NetworkImage('https://loremflickr.com/200/200/logo,website?lock=profile'), 
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -234,6 +240,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 2,
       itemBuilder: (context, index) {
+        final String portfolioImage = 'https://loremflickr.com/400/200/website,coding?lock=$index';
         return Container(
           color: Colors.white,
           margin: const EdgeInsets.only(bottom: 8),
@@ -247,7 +254,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
                     radius: 20,
                     backgroundColor: Colors.grey,
                     // Owner Avatar
-                    backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                    backgroundImage: NetworkImage('https://loremflickr.com/200/200/logo,website?lock=profile'),
                   ),
                   const SizedBox(width: 10),
                   const Expanded(
@@ -271,8 +278,8 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://via.placeholder.com/400x200'),
+                  image: DecorationImage(
+                    image: NetworkImage(portfolioImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -348,12 +355,16 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
 
   // 4. Review Item Helper
   Widget _buildReviewItem(Map<String, dynamic> review) {
+    final String cleanName = review['name'].toString().replaceAll(' ', '');
+    final String profileImage = 'https://i.pravatar.cc/150?u=$cleanName';
+    final String reviewImage = 'https://loremflickr.com/300/400/website,screen?random=$cleanName';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const CircleAvatar(radius: 20, backgroundColor: Colors.grey),
+            CircleAvatar(radius: 20, backgroundColor: Colors.grey , backgroundImage: NetworkImage(profileImage),),
             const SizedBox(width: 12),
             Expanded(
               child: RichText(
@@ -372,6 +383,21 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> with Sing
         Row(children: List.generate(5, (index) => Icon(Icons.star, color: index < review['rating'] ? Colors.amber : Colors.grey.shade300, size: 20))),
         const SizedBox(height: 8),
         Text(review['comment'], style: const TextStyle(fontSize: 14)),
+        if (review['hasImage'] == true) ...[
+          const SizedBox(height: 12),
+          Container(
+            height: 180,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.grey[200],
+              image: DecorationImage(
+                image: NetworkImage(reviewImage), // Pakai URL di atas
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

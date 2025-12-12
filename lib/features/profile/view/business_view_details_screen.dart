@@ -46,7 +46,7 @@ class BusinessViewDetailsScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.grey[200],
                     image: const DecorationImage(
-                      image: NetworkImage('https://via.placeholder.com/150'),
+                      image: NetworkImage('https://loremflickr.com/200/200/logo,website?lock=profile'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -104,7 +104,7 @@ class BusinessViewDetailsScreen extends StatelessWidget {
                       color: Colors.grey[300],
                       image: const DecorationImage(
                         image: NetworkImage(
-                          'https://via.placeholder.com/100x100?text=Map',
+                          'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80',
                         ),
                         fit: BoxFit.cover,
                       ),

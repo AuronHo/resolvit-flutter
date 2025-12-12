@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.grey[300],
                       image: const DecorationImage(
-                        image: NetworkImage('https://via.placeholder.com/150'), 
+                        image: NetworkImage('https://loremflickr.com/200/200/logo,website?lock=profile'), 
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -95,25 +95,7 @@ class SettingsScreen extends StatelessWidget {
             const Divider(height: 1, thickness: 1, color: Colors.grey),
 
             // --- 4. SETTINGS ITEMS ---
-            
-            // Theme Toggle
-            _buildActionRow(
-              title: 'Theme',
-              trailing: Row(
-                children: [
-                  Text(
-                    isDark ? 'dark mode' : 'light mode',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-                ],
-              ),
-              onTap: () {
-                themeController.toggleTheme(!isDark);
-              },
-            ),
-
+           
             // Reset Password
             _buildActionRow(
               title: 'Reset Password',

@@ -137,7 +137,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
                 Container(
                   height: 180,
                   width: double.infinity,
-                  color: brandBlue,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF3573FA), // Warna cadangan saat loading
+                    image: DecorationImage(
+                      // Ganti URL ini dengan foto toko/sampul yang diinginkan
+                      image: NetworkImage('https://loremflickr.com/640/360/store,shop?lock=cover'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   child: Stack(
                     children: [
                       Opacity(
@@ -169,7 +176,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
                           CircleAvatar(
                             radius: 35,
                             backgroundColor: Colors.grey[300],
-                            child: const Icon(Icons.store, size: 30, color: Colors.grey),
+                            backgroundImage: const NetworkImage('https://loremflickr.com/200/200/mobile,phone,logo?lock=buana'),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -371,6 +378,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
 
   // Widget Item Review Dinamis
   Widget _buildReviewItem(Map<String, dynamic> review) {
+
+    final String cleanName = review['name'].toString().replaceAll(' ', '');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -428,8 +438,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.grey[200],
-              image: const DecorationImage(
-                image: NetworkImage('https://via.placeholder.com/150x200?text=Bukti+Foto'),
+              image: DecorationImage(
+                image: NetworkImage('https://loremflickr.com/300/400/broken,phone?random=$cleanName'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -448,6 +458,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
       itemBuilder: (context, index) {
         final String time = index == 0 ? '1d' : '2d';
         final String caption = index == 0 ? 'Professional work' : 'HP rusak? Konsul disini aja duluh';
+        final String portfolioImage = 'https://loremflickr.com/400/200/technician,repair?lock=$index';
         return Container(
           color: Colors.white,
           margin: const EdgeInsets.only(bottom: 8),
@@ -460,7 +471,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
                   const CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.grey,
-                    child: Icon(Icons.store, color: Colors.white, size: 20),
+                    backgroundImage: const NetworkImage('https://loremflickr.com/200/200/mobile,phone,logo?lock=buana'),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -484,8 +495,8 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://via.placeholder.com/400x200'),
+                  image: DecorationImage(
+                    image: NetworkImage(portfolioImage),
                     fit: BoxFit.cover,
                   ),
                 ),

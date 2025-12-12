@@ -41,10 +41,10 @@ class ViewDetailsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey[200],
-                    image: const DecorationImage(
+                    image: DecorationImage(
                       // Ganti dengan asset gambar toko Anda
                       // image: AssetImage('assets/images/toko_avatar.png'),
-                      image: NetworkImage('https://via.placeholder.com/150'), 
+                      image: NetworkImage('https://loremflickr.com/200/200/mobile,phone,logo?lock=buana'), 
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -105,9 +105,9 @@ class ViewDetailsScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.grey[300],
-                      image: const DecorationImage(
+                      image: DecorationImage(
                         // Ganti dengan asset map placeholder
-                         image: NetworkImage('https://via.placeholder.com/100x100?text=Map'),
+                         image: NetworkImage('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80'),
                         fit: BoxFit.cover,
                       )
                     ),
