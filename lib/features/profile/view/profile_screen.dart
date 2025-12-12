@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../main_navigation/logic/theme_controller.dart'; 
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,10 +7,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Warna Biru Branding
     const Color brandBlue = Color(0xFF4981FB);
-    
-    // Akses Theme Controller
-    final themeController = context.watch<ThemeController>();
-    final isDark = themeController.isDarkMode;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9), // Background putih abu
