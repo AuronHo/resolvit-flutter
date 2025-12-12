@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../main_navigation/logic/theme_controller.dart'; 
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -8,9 +6,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const Color brandBlue = Color(0xFF4981FB);
-    final themeController = context.watch<ThemeController>();
-    final isDark = themeController.isDarkMode;
-
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
