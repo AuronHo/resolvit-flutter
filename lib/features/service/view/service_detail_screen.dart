@@ -3,6 +3,7 @@ import 'view_details_screen.dart';
 import '../../main_navigation/view/widgets/custom_bottom_nav_bar.dart';
 import 'package:provider/provider.dart'; 
 import '../../main_navigation/logic/navigation_controller.dart';
+import '../../chat/view/chat_detail_screen.dart'; 
 
 class ServiceDetailScreen extends StatefulWidget {
   const ServiceDetailScreen({super.key});
@@ -206,7 +207,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> with SingleTi
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const ChatDetailScreen()),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF4981FB),
                                 foregroundColor: Colors.white,

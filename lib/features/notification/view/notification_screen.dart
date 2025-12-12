@@ -36,7 +36,6 @@ class NotificationScreen extends StatelessWidget {
             time: "10 min",
             isUnread: true,
             onTap: () {
-              // Navigate to Rate Screen
               Navigator.pushNamed(context, '/rate_service');
             },
           ),
@@ -44,10 +43,12 @@ class NotificationScreen extends StatelessWidget {
           _buildNotificationItem(
             context,
             title: "Rate the service 2",
-            description: "Your Chat with Website CepatLulus has ended 2 Weeks ago. Does Website CepatLulus helpful? Give it a rate!",
+            description: "Your Chat with Website CepatLulus has ended 5 Weeks ago. Does Website CepatLulus helpful? Give it a rate!",
             time: "1 hour",
             isUnread: false,
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/rate_service');
+            },
           ),
         ],
       ),
@@ -80,7 +81,7 @@ class NotificationScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Colors.grey[300],
                 image: const DecorationImage(
-                  image: NetworkImage('https://via.placeholder.com/150'),
+                  image: NetworkImage('https://loremflickr.com/200/200/mobile,phone,logo?lock=buana'),
                   fit: BoxFit.cover,
                 ),
               ),

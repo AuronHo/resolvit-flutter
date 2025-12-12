@@ -57,7 +57,7 @@ class _RateServiceScreenState extends State<RateServiceScreen> {
                     shape: BoxShape.circle,
                     color: Colors.grey[300],
                     image: const DecorationImage(
-                      image: NetworkImage('https://via.placeholder.com/150'),
+                      image: NetworkImage('https://loremflickr.com/200/200/mobile,phone,logo?lock=buana'),
                       fit: BoxFit.cover,
                     ),
                   ),

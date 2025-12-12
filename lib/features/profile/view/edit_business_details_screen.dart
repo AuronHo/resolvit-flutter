@@ -226,10 +226,10 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
         children: [
           // Toggle
           SizedBox(
-            width: 30,
-            height: 20,
+            width: 40,
+            height: 24,
             child: Transform.scale(
-              scale: 0.7,
+              scale: 0.6,
               child: Switch(
                 value: isOpen, 
                 activeColor: const Color(0xFF4CAF50),
@@ -244,21 +244,29 @@ class _EditBusinessDetailsScreenState extends State<EditBusinessDetailsScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
           
           // Day Name
           Expanded(
-            flex: 2,
-            child: Text(day, style: const TextStyle(fontSize: 11, color: Colors.black87))
+            flex: 3, // Give day name a bit more weight
+            child: Text(day,
+                style: const TextStyle(fontSize: 11, color: Colors.black87),
+                overflow: TextOverflow.ellipsis), // Prevent text overflow
           ),
           
           // Inputs
           if (isOpen) ...[
             Expanded(flex: 3, child: _buildTimeInput("08:00")),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 4.0), child: Text("-", style: TextStyle(fontSize: 10))),
+            const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text("-", style: TextStyle(fontSize: 10))),
             Expanded(flex: 3, child: _buildTimeInput("22:00")),
-          ] else 
-            const Expanded(flex: 6, child: Text("Closed", style: TextStyle(fontSize: 11, color: Colors.grey))),
+          ] else
+            const Expanded(
+                flex: 7, // Takes up the space of both inputs + dash
+                child: Text("Closed",
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                    textAlign: TextAlign.center)),
         ],
       ),
     );

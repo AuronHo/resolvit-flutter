@@ -170,22 +170,31 @@ class BusinessViewDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeRow(String day, String time, {bool isRed = false}) {
+Widget _buildTimeRow(String day, String time, {bool isRed = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start, // Jaga agar teks rata atas jika nge-wrap
         children: [
-          Text(
-            day,
-            style: const TextStyle(fontSize: 12, color: Colors.black87),
+          // 1. Nama Hari (Diberi lebar fix secukupnya agar rapi)
+          SizedBox(
+            width: 75, 
+            child: Text(
+              day,
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
           ),
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 12,
-              color: isRed ? Colors.red : Colors.black87,
-              fontWeight: isRed ? FontWeight.bold : FontWeight.normal,
+          
+          // 2. Jam (Diberi Expanded agar mengisi sisa ruang dan tidak overflow)
+          Expanded(
+            child: Text(
+              time,
+              textAlign: TextAlign.right, // Rata kanan agar rapi
+              style: TextStyle(
+                fontSize: 12,
+                color: isRed ? Colors.red : Colors.black87,
+                fontWeight: isRed ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
           ),
         ],

@@ -47,69 +47,75 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             stops: isDark ? null : [0.0, 0.5, 1.0], 
           ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                
-                Center(
-                  child: Text(
-                    'Reset Password',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: dynamicTextColor),
+        
+        // --- PERBAIKAN DI SINI: Tambahkan SingleChildScrollView ---
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  
+                  Center(
+                    child: Text(
+                      'Reset Password',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: dynamicTextColor),
+                    ),
                   ),
-                ),
-                
-                const SizedBox(height: 40),
+                  
+                  const SizedBox(height: 40),
 
-                // Input New Password
-                _buildLabel('New Password', dynamicTextColor),
-                _buildTextField(
-                  controller: _newPassController,
-                  hint: '***********',
-                  isObscure: _isObscure,
-                  toggleObscure: () {
-                    setState(() => _isObscure = !_isObscure);
-                  },
-                  showEye: true,
-                ),
-
-                const SizedBox(height: 16),
-
-                // Input Confirm Password
-                _buildLabel('Confirm New Password', dynamicTextColor),
-                _buildTextField(
-                  controller: _confirmPassController,
-                  hint: '***********',
-                  isObscure: true, // Selalu hidden untuk confirm (sesuai gambar)
-                  showEye: false,
-                ),
-
-                const SizedBox(height: 30),
-
-                // BUTTON FINISH
-                ElevatedButton(
-                  onPressed: () {
-                    // --- FINISH: LANGSUNG KE LOGIN ---
-                    // Menggunakan pushNamedAndRemoveUntil agar user tidak bisa back ke halaman reset
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Password changed! Please login.'), backgroundColor: Colors.green),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor,
-                    foregroundColor: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    minimumSize: const Size(double.infinity, 55),
+                  // Input New Password
+                  _buildLabel('New Password', dynamicTextColor),
+                  _buildTextField(
+                    controller: _newPassController,
+                    hint: '***********',
+                    isObscure: _isObscure,
+                    toggleObscure: () {
+                      setState(() => _isObscure = !_isObscure);
+                    },
+                    showEye: true,
                   ),
-                  child: const Text('Finish', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-              ],
+
+                  const SizedBox(height: 16),
+
+                  // Input Confirm Password
+                  _buildLabel('Confirm New Password', dynamicTextColor),
+                  _buildTextField(
+                    controller: _confirmPassController,
+                    hint: '***********',
+                    isObscure: true, // Selalu hidden untuk confirm
+                    showEye: false,
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // BUTTON FINISH
+                  ElevatedButton(
+                    onPressed: () {
+                      // --- FINISH: LANGSUNG KE LOGIN ---
+                      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Password changed! Please login.'), backgroundColor: Colors.green),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: buttonColor,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      minimumSize: const Size(double.infinity, 55),
+                    ),
+                    child: const Text('Finish', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  
+                  // Tambahan padding bawah agar aman saat discroll mentok bawah
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),

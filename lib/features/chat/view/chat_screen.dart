@@ -26,13 +26,6 @@ class ChatScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Tombol Kembali
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    // Navigator.pop(context); // Aktifkan jika perlu
-                  },
-                ),
                 
                 const SizedBox(width: 8),
 
@@ -102,12 +95,15 @@ class ChatScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               itemCount: 3, 
               itemBuilder: (context, index) {
+
+                final String randomProfile = 'https://i.pravatar.cc/150?u=${index + 10}';
+
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  leading: const CircleAvatar(
+                  leading: CircleAvatar(
                     radius: 28,
                     backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage('https://via.placeholder.com/150'), 
+                    backgroundImage: NetworkImage(randomProfile), 
                   ),
                   title: const Text(
                     'Buana Phone Service',

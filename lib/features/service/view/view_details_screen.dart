@@ -180,16 +180,28 @@ class ViewDetailsScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start, // Pastikan rata atas
         children: [
-          Text(day, style: const TextStyle(fontSize: 12, color: Colors.black87)),
-          Text(
-            time, 
-            style: TextStyle(
-              fontSize: 12, 
-              color: isRed ? Colors.red : Colors.black87,
-              fontWeight: isRed ? FontWeight.bold : FontWeight.normal,
-            )
+          // 1. Nama Hari (Fix Width secukupnya)
+          SizedBox(
+            width: 75,
+            child: Text(
+              day,
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
+          ),
+          
+          // 2. Jam (Expanded agar mengisi sisa ruang & wrap jika perlu)
+          Expanded(
+            child: Text(
+              time,
+              textAlign: TextAlign.right, // Rata kanan
+              style: TextStyle(
+                fontSize: 12,
+                color: isRed ? Colors.red : Colors.black87,
+                fontWeight: isRed ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ),
         ],
       ),
