@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../../main_navigation/logic/theme_controller.dart'; 
 import '../../../constants/app_colors.dart';
@@ -16,7 +18,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _isLoading = false;
 
   void _handleResetPassword() async {
-    if (_emailController.text.isEmpty) {
+    final String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter your email'), backgroundColor: Colors.red),
       );
@@ -25,21 +29,47 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     setState(() => _isLoading = true);
 
-    // Simulasi proses kirim email
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      // Panggil API Golang (Ganti IP jika tidak pakai emulator)
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/api/forgot-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
+      setState(() => _isLoading = false);
 
-    setState(() => _isLoading = false);
-
-    // Tampilkan pesan sukses dan kembali
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Verification code sent to ${_emailController.text}'), 
-        backgroundColor: Colors.green
-      ),
-    );
-    Navigator.pushNamed(context, '/verification_code'); // Kembali ke halaman Login
+      if (response.statusCode == 200) {
+        // Berhasil kirim OTP
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Verification code sent to $email'), 
+            backgroundColor: Colors.green
+          ),
+        );
+        
+        // Pindah ke halaman input kode verifikasi & password baru
+        // Kita kirim email-nya sebagai argument agar layar berikutnya tahu email siapa yang di-reset
+        Navigator.pushNamed(
+          context, 
+          '/verification_code', 
+          arguments: email
+        );
+      } else {
+        // Gagal (Misal: masalah server)
+        final errorData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorData['error'] ?? 'Failed to send OTP'), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Connection error to server'), backgroundColor: Colors.red),
+      );
+    }
   }
 
   @override

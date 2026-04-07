@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 // 1. We extend "ChangeNotifier". This class can "notify"
 //    the UI when its data changes.
 class AuthController extends ChangeNotifier {
+
+  final String apiUrl = "http://10.0.2.2:8080/api/register";
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   // --- STATE VARIABLES ---
 
@@ -43,26 +53,81 @@ class AuthController extends ChangeNotifier {
   // We'll make it return a boolean for success/failure
   // so the UI can show the right SnackBar.
   Future<bool> registerUser() async {
-    // This is where you would get your form data
-    // and send it to Firebase or your API.
-    
-    // For now, we just simulate a network delay
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": nameController.text,
+          "email": emailController.text,
+          "password": passwordController.text,
+          "role": "customer"
+        }),
+      );
 
-    // Let's pretend it was successful
-    print('--- REGISTRATION LOGIC RAN SUCCESSFULLY ---');
-    return true; 
-    
-    // If it failed, you would: return false;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        // Bisa tambahkan log untuk debug
+        print("Gagal Register: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Error koneksi ke Backend: $e");
+      return false;
+    }
   }
 
   // Fungsi Login Dummy
-  Future<bool> loginUser() async {
-    // Simulasi loading 2 detik
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // Disini nanti logika ke API/Firebase
-    // Untuk sekarang kita anggap selalu sukses
-    return true; 
+  Future<bool> loginUser(String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.0.2.2:8080/api/login"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        String token = data['token'];
+
+        // SIMPAN TOKEN KE MEMORI HP
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', token);
+
+        return true;
+      } else {
+        print("Login Gagal: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Error Koneksi Login: $e");
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> sendForgotPasswordOTP(String email) async {
+    final response = await http.post(
+      Uri.parse("http://10.0.2.2:8080/api/forgot-password"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"email": email}),
+    );
+    return jsonDecode(response.body);
+  }
+
+  Future<Map<String, dynamic>> resetPassword(String email, String otp, String newPassword) async {
+    final response = await http.post(
+      Uri.parse("http://10.0.2.2:8080/api/reset-password"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "email": email,
+        "otp": otp,
+        "new_password": newPassword,
+      }),
+    );
+    return jsonDecode(response.body);
   }
 }

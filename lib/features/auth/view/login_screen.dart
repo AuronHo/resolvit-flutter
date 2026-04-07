@@ -29,19 +29,23 @@ class _LoginScreenState extends State<LoginScreen> {
       // Panggil fungsi login di controller (Kita akan buat fungsi ini nanti)
       // Untuk sekarang simulasi sukses saja
       final authController = context.read<AuthController>();
-      final bool success = await authController.loginUser(); 
+      final bool success = await authController.loginUser(
+        _emailController.text, 
+        _passwordController.text
+      ); 
 
       if (!mounted) return;
 
       if (success) {
+       // Jika berhasil, langsung lempar ke Home
+        Navigator.pushReplacementNamed(context, '/home');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login successful!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('Login Berhasil!'), backgroundColor: Colors.green),
         );
-        // Masuk ke Home dan hapus history login
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       } else {
+        // Jika gagal (misal password salah)
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login failed. Check your credentials.'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('Email atau Password salah!'), backgroundColor: Colors.red),
         );
       }
       setState(() => _isLoading = false);

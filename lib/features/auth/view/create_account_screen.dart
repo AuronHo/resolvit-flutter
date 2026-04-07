@@ -29,6 +29,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     if (_formKey.currentState!.validate() && authController.agreedToTerms) {
       setState(() => _isLoading = true);
 
+      authController.nameController.text = _nameController.text;
+      authController.emailController.text = _emailPhoneController.text;
+      authController.passwordController.text = _passwordController.text;
+      
       final bool success = await authController.registerUser();
 
       if (!mounted) return;
