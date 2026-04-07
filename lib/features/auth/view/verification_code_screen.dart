@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
 import '../../main_navigation/logic/theme_controller.dart'; 
 
@@ -15,23 +16,91 @@ class VerificationCodeScreen extends StatefulWidget {
 
 class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
   bool _isVerifying = false;
+  // Logic Timer Resend
+  int _secondsRemaining = 60; 
+  Timer? _timer;
+  bool _canResend = false;
+  String? _userEmail;
 
-  // Controller untuk 5 kotak
+  @override
+  void initState() {
+    super.initState();
+    _startTimer(); // Mulai hitung mundur saat layar dibuka
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Ambil email dari arguments untuk digunakan saat resend
+    _userEmail ??= ModalRoute.of(context)!.settings.arguments as String;
+  }
+
+  void _startTimer() {
+    setState(() {
+      _secondsRemaining = 60;
+      _canResend = false;
+    });
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (_secondsRemaining > 0) {
+            _secondsRemaining--;
+          } else {
+            _canResend = true;
+            _timer?.cancel();
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Pastikan timer dimatikan saat pindah screen
+    // ... sisa dispose controller & nodes kamu ...
+    super.dispose();
+  }
+
+  Future<void> _resendCode() async {
+    if (_userEmail == null) return;
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/api/forgot-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': _userEmail}),
+      );
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('New OTP code sent!'), backgroundColor: Colors.green),
+        );
+        _startTimer(); // Reset timer ke 60 detik lagi
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to resend code'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  // Controller untuk 6 kotak
   final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
   
   // FocusNode untuk mengatur perpindahan fokus keyboard
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
 
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   for (var controller in _controllers) {
+  //     controller.dispose();
+  //   }
+  //   for (var node in _focusNodes) {
+  //     node.dispose();
+  //   }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +166,10 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                       style: TextStyle(fontWeight: FontWeight.bold, color: dynamicTextColor),
                     ),
                     TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Resend code',
-                        style: TextStyle(color: Color(0xFF3573FA), fontWeight: FontWeight.bold),
+                      onPressed: _canResend ? _resendCode : null,
+                      child: Text(
+                        _canResend ? 'Resend code' : 'Resend in ${_secondsRemaining}s',
+                        style: TextStyle(color: _canResend ? const Color(0xFF3573FA) : Colors.grey, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
